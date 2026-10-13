@@ -1,7 +1,8 @@
+import { useState } from "react";
 import type { Image } from "../types/image";
 import { ImageItem } from "./ImageItem";
 
-const mockImages: Image[] = [
+const initialImages: Image[] = [
     {
         id: '1',
         title: 'Eagle',
@@ -10,7 +11,7 @@ const mockImages: Image[] = [
     },
     {
         id: '2',
-        title: 'Frozen Snow-Capped Peaks',
+        title: 'Frozen Peaks',
         author: 'Miguel Inácio',
         url: 'https://images.unsplash.com/photo-1778303814569-3cb046f8c7c5?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D'
     },
@@ -65,21 +66,34 @@ const mockImages: Image[] = [
 ];
 
 export function Gallery() {
+    const [images, setImages] = useState<Image[]>(initialImages);
+
+    const handleDelete = (id: string) => {
+        setImages((prevImages) => prevImages.filter((img) => img.id !== id));
+    };
+
     return (
         <section className="p-6 max-w-7xl mx-auto">
             <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">
                 Image Gallery
             </h2>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 items-start">
-                {mockImages.map((img, index) => (
-                    <ImageItem
-                        key={img.id}
-                        image={img}
-                        isFeatured={index === 0}
-                    />
-                ))}    
-            </div>
+            {images.length === 0 ? (
+                <p className="text-center text-gray-500 py-12">
+                    No images available in the gallery.
+                </p>
+            ) : ( 
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 items-start">
+                    {images.map((img, index) => (
+                        <ImageItem
+                            key={img.id}
+                            image={img}
+                            isFeatured={index === 0}
+                            onDelete={handleDelete}
+                        />
+                    ))}    
+                </div>
+            )}
         </section>
     );
 }
