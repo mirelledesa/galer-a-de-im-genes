@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import type { Image } from "../types/image";
 import { ImageItem } from "./ImageItem";
 
@@ -67,16 +67,79 @@ const initialImages: Image[] = [
 
 export function Gallery() {
     const [images, setImages] = useState<Image[]>(initialImages);
+    const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+    const draggedItemIndex = useRef<number | null>(null);
 
     const handleDelete = (id: string) => {
-        setImages((prevImages) => prevImages.filter((img) => img.id !== id));
+        if (window.confirm("Are you sure you want to delete this image?")) {
+            setImages((prevImages) => prevImages.filter((img) => img.id !== id));
+            setSelectedIds((prev) => {
+                const next = new Set(prev);
+                next.delete(id);
+                return next;
+            });
+        }
+    };
+
+    const handleToggleSelect = (id: string) => {
+        setSelectedIds((prev) => {
+            const next = new Set(prev);
+            if (next.has(id)) {
+                next.delete(id);
+            } else {
+                next.add(id);
+            }
+            return next;
+        });
+    };
+
+    const handleDeleteSelected = () => {
+        if (selectedIds.size === 0) return;
+
+        if (window.confirm(`Are you sure you want to delete ${selectedIds.size} selected image(s)?`)) {
+            setImages((prevImages) => prevImages.filter((img) => !selectedIds.has(img.id)));
+            setSelectedIds(new Set());
+        }
+    };
+
+    const handleDragStart = (_e: React.DragEvent<HTMLDivElement>, index: number) => {
+        draggedItemIndex.current = index;
+    };
+
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+    };
+
+    const handleDrop = (_e: React.DragEvent<HTMLDivElement>, targetIndex: number) => {
+        if (draggedItemIndex.current === null) return;
+
+        const sourceIndex = draggedItemIndex.current;
+        if (sourceIndex === targetIndex) return;
+
+        const updatedImages = [...images];
+        const [movedImage] = updatedImages.splice(sourceIndex, 1);
+        updatedImages.splice(targetIndex, 0, movedImage);
+
+        setImages(updatedImages);
+        draggedItemIndex.current = null;
     };
 
     return (
         <section className="p-6 max-w-7xl mx-auto">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">
-                Image Gallery
-            </h2>
+            <div className="flex justify-between items-center mb-6 border-b pb-4">
+                <h2 className="text-2xl font-bold text-gray-800">
+                    Image Gallery
+                </h2>
+
+                {selectedIds.size > 0 && (
+                    <button
+                        onClick={handleDeleteSelected}
+                        className="bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg shadow transition-colors flex items-center gap-2"
+                    >
+                        Delete Selected ({selectedIds.size})
+                    </button>
+                )}
+            </div>
 
             {images.length === 0 ? (
                 <p className="text-center text-gray-500 py-12">
@@ -88,8 +151,14 @@ export function Gallery() {
                         <ImageItem
                             key={img.id}
                             image={img}
+                            index={index}
                             isFeatured={index === 0}
+                            isSelected={selectedIds.has(img.id)}
                             onDelete={handleDelete}
+                            onToggleSelect={handleToggleSelect}
+                            onDragStart={handleDragStart}
+                            onDragOver={handleDragOver}
+                            onDrop={handleDrop}
                         />
                     ))}    
                 </div>
