@@ -67,7 +67,7 @@ export function ImageItem({
 
       <div className="relative w-full overflow-hidden flex-1 min-h-[160px] h-full">
         <img
-          src={image.url}
+          src={image.src}
           alt={`Photograph titled ${image.title} by ${image.author}`}
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300 min-h-[160px]"
           onDragStart={(e) => e.preventDefault()}

@@ -1,15 +1,16 @@
 # 🖼️ Responsive Image Gallery
 
-A modern and interactive image gallery web application built with **React**, **TypeScript**, **Tailwind CSS**, and **Vite**. The project focuses on a smooth user experience, highly responsive design, and a clean component architecture.
+A modern and interactive image gallery web application built with **React**, **TypeScript**, **Tailwind CSS**, and **Vite**. The project focuses on a smooth user experience, highly responsive design, dynamic data handling via props, and a clean component architecture.
 
 ---
 
 ## ✨ Main Features
 
 * **Adaptive Responsive Grid:** Dynamic layout optimized for different screen breakpoints (Mobile, Tablet, and Desktop).
-* **Featured Image:** The first image in the gallery features special visual and structural prominence on large screens.
+* **Featured Image:** The first image in the gallery features special visual and structural prominence ($2 \times 2$ grid area) on large screens.
 * **Interactive Drag & Drop:** Ability to dynamically reorder items by dragging them directly across the grid.
-* **Selection & Deletion Management:** Support for individual or multiple image selection, with batch deletion and security confirmation.
+* **Selection & Deletion Management:** Support for individual or multiple image selection, with batch deletion and confirmation.
+* **Strict Schema Compliance:** Image data objects built using high-resolution images provided by `picsum.photos` passed via props using the required `src` property schema.
 * **Modular Componentization:** Clear separation between state/layout management (`Gallery`) and the visual presentation of individual items (`ImageItem`).
 
 ---
@@ -26,12 +27,13 @@ The grid adapts strictly according to the following structural rules:
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Tech Stack & Data Provider
 
 * **React** (Functional Components & Hooks)
 * **TypeScript** (Static and secure typing)
 * **Tailwind CSS** (Modern utility-first styling)
-* **Vite** (High-performance development environment and build tool)
+* **Vite** (High-performance development environment)
+* **Picsum Photos API** (`https://picsum.photos/`) for reliable high-quality sample image sources.
 
 ---
 
@@ -41,4 +43,4 @@ Make sure you have **Node.js** installed on your computer.
 
 1. Clone the repository:
    ```bash
-   git clone <your-repository-url>
+   git clone <https://github.com/mirelledesa/galer-a-de-im-genes.git>
