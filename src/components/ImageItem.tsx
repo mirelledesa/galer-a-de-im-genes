@@ -23,6 +23,15 @@ export function ImageItem({
   onDragOver,
   onDrop,
 }: ImageItemProps) {
+  let borderStyles = "border-gray-200 hover:border-gray-400";
+  if (isSelected) {
+    borderStyles = "ring-4 ring-red-800 border-red-800 shadow-xl scale-[0.98]";
+  } else if (isFeatured) {
+    borderStyles = "ring-2 ring-black border-black shadow-xl z-10";
+  }
+
+  const gridSpanStyles = isFeatured ? "lg:col-span-2 lg:row-span-2" : "col-span-1 row-span-1";
+
   return (
     <div
       draggable
@@ -30,13 +39,7 @@ export function ImageItem({
       onDragOver={onDragOver}
       onDrop={(e) => onDrop(e, index)}
       onClick={() => onToggleSelect(image.id)}
-      className={`overflow-hidden rounded-lg shadow-md transition-all duration-300 bg-white border flex flex-col h-full relative group cursor-grab active:cursor-grabbing ${
-        isSelected
-          ? "ring-4 ring-red-800 border-red-800 shadow-xl scale-[0.98]"
-          : isFeatured
-          ? "ring-4 ring-black-700 border-black-500 shadow-xl transform sm:-translate-x-3 sm:scale-105 z-10"
-          : "border-gray-200 hover:border-gray-400"
-      }`}
+      className={`overflow-hidden rounded-lg shadow-md transition-all duration-300 bg-white border flex flex-col relative group cursor-grab active:cursor-grabbing ${gridSpanStyles} ${borderStyles}`}
     >
       <button
         onClick={(e) => {
@@ -62,7 +65,7 @@ export function ImageItem({
         </svg>
       </button>
 
-      <div className="relative w-full overflow-hidden flex-1 min-h-[160px]">
+      <div className="relative w-full overflow-hidden flex-1 min-h-[160px] h-full">
         <img
           src={image.url}
           alt={`Photograph titled ${image.title} by ${image.author}`}
